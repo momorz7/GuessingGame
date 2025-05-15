@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess The Number!!</title>
+    <style>
+          
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .game-input {
+            font-size: 16px;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+        .game-button {
+            font-size: 16px;
+            padding: 5px 10px;
+            background-color: #5F7394;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .game-button:hover {
+            background-color: #2A4D77;
+        }
+        .game-message {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        #guessesLeft {
+            font-weight: bold;
+            color: #5F7394;
+        }
+        /* Text for the Game*/
+    </style>
+</head>
+<body> /
+    <div class="game-container">   
+        <h1>Guess The Number!</h1>
+        <p>by Morgan Roland </p>
+        <p>Guess a number between 1 and 100: </p>
+        <input type="number" id="guessInput" class="game-input" min="1" max="100">
+        <button onclick="checkGuess()" class="game-button">Guess</button>
+        <p>Guesses left: <span id="guessesLeft">7</span></p>
+        <p id="message" class="game-message"></p>
+        <button onclick="resetGame()" class="game-button" id="resetButton" style="display: none;">Start Over</button>
+    </div>
+
+    <script>
+        let targetNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        let maxAttempts = 7;
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            attempts++;
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                setMessage("Please enter a valid number between 1 and 100.");
+                attempts--; // Don't count invalid guesses
+                return;
+            }
+               // counts the guesses player has left
+            const guessesLeft = maxAttempts - attempts;
+            document.getElementById('guessesLeft').textContent = guessesLeft;
+
+            if (guess === targetNumber) {
+                setMessage(`Congratulations! You guessed the number in ${attempts} attempts!`);
+                endGame();
+            } else if (guessesLeft === 0) {
+                setMessage(`Sorry, you've run out of guesses. The number was ${targetNumber}.`);
+                endGame();
+            } else if (guess < targetNumber) {
+                setMessage("Too low! Try a higher number.");
+            } else {
+                setMessage("Too high! Try a lower number.");
+            }
+        }
+
+        function setMessage(msg) {
+            document.getElementById('message').textContent = msg;
+        }
+
+        function endGame() {
+            document.querySelector('.game-button').disabled = true;
+            document.getElementById('resetButton').style.display = 'inline-block';
+        }
+        
+        // function to restart 
+        function resetGame() { 
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessesLeft').textContent = maxAttempts;
+            setMessage('');
+            document.querySelector('.game-button').disabled = false;
+            document.getElementById('resetButton').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
